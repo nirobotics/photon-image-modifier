@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          
+
           - name: radxa_nx5
             script: ./install_opi5.sh
             base_image: https://github.com/Joshua-Riek/ubuntu-rockchip/releases/download/v2.4.0/ubuntu-22.04-preinstalled-server-arm64-radxa-nx5-io.img.xz
