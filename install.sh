@@ -212,8 +212,15 @@ else
   RELEASE_URL="https://api.github.com/repos/photonvision/photonvision/releases/tags/$VERSION"
 fi
 
-DOWNLOAD_URL=$(curl -sk "$RELEASE_URL" |
-                  grep "browser_download_url.*$ARCH_NAME.jar" |
+# use GITHUB TOKEN when available to authenticate
+if [[ -n $GH_TOKEN ]]; then
+  RELEASES=$(curl -s -H "Authorization: Bearer $GH_TOKEN" "$RELEASE_URL")
+else
+  RELEASES=$(curl -sk "$RELEASE_URL")
+fi
+
+DOWNLOAD_URL=$(echo "$RELEASES" |
+                  grep "browser_download_url.*${ARCH_NAME}\.jar" |
                   cut -d : -f 2,3 |
                   tr -d '"'
               )
@@ -257,6 +264,7 @@ install_if_missing libatomic1
 install_if_missing v4l-utils
 install_if_missing sqlite3
 install_if_missing openjdk-17-jre-headless
+install_if_missing usbtop
 
 debug "Setting cpufrequtils to performance mode"
 if [[ -z $TEST ]]; then
